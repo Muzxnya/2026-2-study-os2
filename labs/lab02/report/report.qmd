@@ -16,6 +16,12 @@ format:
     colorlinks: true
     pdf-engine: xelatex
     mainfont: "Times New Roman"
+    include-in-header:
+      text: |
+        \usepackage{titlesec}
+        \newcommand{\sectionbreak}{\clearpage}
+        \let\oldsection\section
+        \renewcommand{\section}[1]{\clearpage\oldsection{#1}}
   docx:
     toc: true
     number-sections: true
@@ -39,7 +45,7 @@ execute:
 
 ## Переключение учётных записей пользователей
 
-Вход в систему был выполнен под обычным пользователем `ZhaoXinya`. Для определения текущего пользователя и его идентификаторов были использованы команды `whoami` и `id`.
+Вход в систему был выполнен под обычным пользователем `zhaoxinya`. Для определения текущего пользователя и его идентификаторов были использованы команды `whoami` и `id`.
 
 ![Определение текущего пользователя](image/1.png){#fig-02-01 width=90%}
 
