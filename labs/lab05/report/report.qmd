@@ -1,0 +1,116 @@
+---
+title: "Лабораторная работа № 5"
+subtitle: "Управление системными службами"
+author:
+  - name: Чжао Синья
+    email: 1132258332@rudn.ru
+    affiliation: 
+      - name: РУДН
+date: "2026-10-17"
+lang: ru
+format:
+  pdf:
+    documentclass: article
+    toc: true
+    number-sections: true
+    colorlinks: true
+    pdf-engine: xelatex
+    mainfont: "Times New Roman"
+    include-in-header:
+      text: |
+        \usepackage{titlesec}
+        \newcommand{\sectionbreak}{\clearpage}
+        \let\oldsection\section
+        \renewcommand{\section}[1]{\clearpage\oldsection{#1}}
+  docx:
+    toc: true
+    number-sections: true
+execute:
+  echo: true
+  eval: false
+---
+
+# Цель работы
+
+Получить навыки управления системными службами операционной системы посредством `systemd`.
+
+# Задачи
+
+1. Выполнить основные операции по управлению службой Very Secure FTP (`vsftpd`).
+2. Разрешить конфликты юнитов для служб `firewalld` и `iptables`.
+3. Продемонстрировать работу с изолированными целями (isolated targets).
+
+# Соглашения об именовании
+
+В соответствии с требованиями к именованию:
+- Имя пользователя: `zhaoxinya`
+- Имя хоста: `zhaoxinya`
+- Имя виртуальной машины: `zhaoxinya`
+
+Проверка выполнена командами:
+
+```bash
+whoami
+hostname
+id
+Выполнение работы
+Управление сервисами
+Для выполнения административных операций был осуществлен вход под учетной записью root (su -).
+
+Был проверен статус службы vsftpd. Так как она не была установлена, система выдала сообщение Unit vsftpd.service could not be found. Служба была установлена с помощью менеджера пакетов dnf -y install vsftpd.
+
+После установки служба была запущена (systemctl start vsftpd), а её статус проверен. Служба перешла в состояние active (running). Далее был продемонстрирован механизм добавления и удаления из автозапуска с помощью команд systemctl enable vsftpd и systemctl disable vsftpd. При включении создается символическая ссылка в каталоге /etc/systemd/system/multi-user.target.wants/.
+
+Зависимости службы были проверены командами systemctl list-dependencies vsftpd и systemctl list-dependencies vsftpd --reverse.
+
+Конфликты юнитов
+Была установлена служба iptables (dnf -y install iptables). Однако в Rocky Linux 10 пакет заменен на iptables-nft, и служба iptables.service отсутствует.
+
+Служба firewalld находится в активном состоянии (active (running)). При попытке запустить iptables система выдает ошибку Unit iptables.service not found. Просмотр конфигурации firewalld.service показал наличие директивы Conflicts=iptables.service, что предотвращает их одновременную работу.
+
+Для демонстрации механизма блокировки юнита была выполнена команда systemctl mask iptables, создавшая символическую ссылку на /dev/null. Попытка включить замаскированный юнит (systemctl enable iptables) завершилась ошибкой Unit is masked.
+
+Изолируемые цели
+Был осуществлен поиск целей с директивой AllowIsolate=yes (grep Isolate *.target). Было выяснено, что изолировать можно multi-user.target, graphical.target, rescue.target, reboot.target.
+
+Была выполнена команда systemctl isolate rescue.target, система перешла в режим восстановления (rescue mode). Перезагрузка через systemctl isolate reboot.target в среде VirtualBox привела к зависанию, поэтому была выполнена принудительная перезагрузка.
+
+Цель по умолчанию
+Текущая цель была проверена командой systemctl get-default (вывод graphical.target).
+
+Была установлена текстовая цель: systemctl set-default multi-user.target. После перезагрузки система загрузилась в текстовом режиме. Затем была возвращена графическая цель graphical.target.
+
+Выводы
+В ходе лабораторной работы были получены навыки:
+
+Управления службами через systemctl: start, stop, enable, disable, status, mask.
+
+Понимания механизма символических ссылок и маскировки юнитов.
+
+Работы с изолированными целями и директивой AllowIsolate.
+
+Установки цели по умолчанию через set-default.
+
+Все поставленные задачи выполнены (с учётом особенностей Rocky Linux 10 и VirtualBox).
+
+Ответы на контрольные вопросы
+Что такое юнит (unit)? Приведите примеры.
+Юнит — это конфигурационный файл systemd, описывающий ресурс. Примеры: vsftpd.service, tmp.mount, multi-user.target.
+
+Какая команда позволяет убедиться, что юнит больше не входит в список автозапуска?
+systemctl is-enabled vsftpd (вывод disabled).
+
+Какую команду использовать для отображения всех сервисных юнитов, загруженных в настоящий момент?
+systemctl list-units --type=service.
+
+Как создать потребность (wants) в сервисе?
+Добавить в секцию [Unit] файла юнита строку Wants=другой_юнит.service.
+
+Как переключить текущее состояние на цель восстановления (rescue target)?
+systemctl isolate rescue.target.
+
+Объясните причину получения сообщения о том, что цель не может быть изолирована.
+Цель не может быть изолирована, если в её юните отсутствует директива AllowIsolate=yes.
+
+Как узнать, какие другие юниты зависят от службы?
+systemctl list-dependencies <service> --reverse.
