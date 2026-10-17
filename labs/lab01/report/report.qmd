@@ -16,12 +16,15 @@ format:
     colorlinks: true
     pdf-engine: xelatex
     mainfont: "Times New Roman"
+    include-in-header:
+      text: |
+        \usepackage{titlesec}
+        \newcommand{\sectionbreak}{\clearpage} # 这一行让每个一级标题（# 目标、# 任务）另起一页
+        \let\oldsection\section
+        \renewcommand{\section}[1]{\clearpage\oldsection{#1}} # 保证每次到新章节都翻页
   docx:
     toc: true
     number-sections: true
-execute:
-  echo: true
-  eval: false
 ---
 
 # Цель работы
