@@ -1,24 +1,18 @@
 ---
-## Author
-author:
-  name: Чжао Синья
-  affiliation:
-    - name: Российский университет дружбы народов
-      country: Российская Федерация
-      postal-code: 117198
-      city: Москва
-      address: ул. Миклухо-Маклая, д. 6
-## Title
-title: Лабораторная работа № 5
-subtitle: Управление системными службами
+title: "Лабораторная работа № 5"
+subtitle: "Управление системными службами"
+author: 
+  - name: Чжао Синья
+    email: 1132258332@rudn.ru
+    affiliation: РУДН
 date: "2026-10-17"
 format:
+  beamer:
+    pdf-engine: lualatex
   revealjs:
     theme: [default, _resources/css/fonts.scss]
     slide-number: true
-    incremental: false
     embed-resources: true
-    logo: _resources/image/logo_rudn.png
 lang: ru
 ---
 
@@ -35,7 +29,7 @@ lang: ru
 - Студенческий билет: 1132258332
 :::
 ::: {.column width="50%"}
-![Фото автора](image/author.jpg){width=100%}
+![Фото автора](image/author.jpg){width=80%}
 :::
 :::
 
@@ -49,7 +43,7 @@ lang: ru
 
 ## Научная новизна и значимость
 
-- **Научная новизна:** Изучение механизма разрешения конфликтов юнитов и изолированных целей (targets) в современных дистрибутивах.
+- **Научная новизна:** Изучение механизма разрешения конфликтов юнитов и изолированных целей (targets).
 - **Практическая значимость:** Навыки управления автозапуском, маскировки юнитов и переключения уровней загрузки системы.
 
 ## Цели и задачи
