@@ -1,0 +1,24 @@
+%%% Load theme
+\IfFileExists{beamerthemegotham.sty}{
+  %%%% Full TeXlive
+  \usetheme{gotham}
+  \gothamset{
+    numbering=totalframenumber,
+    parttocframe default=off,
+    sectiontocframe default=off,
+    subsectiontocframe default=off,
+    tocframe template=gotham bullet,
+    progressbar position=foot,
+  }
+  
+  % 把背景画布清空（干掉那个巨大的地球）
+  \setbeamertemplate{background canvas}{}
+  
+  \renewcommand{\gothamInstituteLogoSquare}[1][4ex]{%
+    \includegraphics[height=##1]{_resources/image/logo_rudn-inverted.png}
+  }
+}{%
+  %%%% TinyTeX
+  \usepackage{libertine}
+  \usetheme{Madrid}
+}
