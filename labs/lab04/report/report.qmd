@@ -1,0 +1,150 @@
+---
+title: "Лабораторная работа № 4"
+subtitle: "Работа с программными пакетами"
+author:
+  - name: Чжао Синья
+    email: 1132258332@rudn.ru
+    affiliation: 
+      - name: РУДН
+date: "2026-10-17"
+lang: ru
+format:
+  pdf:
+    documentclass: article
+    toc: true
+    number-sections: true
+    colorlinks: true
+    pdf-engine: xelatex
+    mainfont: "Times New Roman"
+    include-in-header:
+      text: |
+        \usepackage{titlesec}
+        \newcommand{\sectionbreak}{\clearpage}
+        \let\oldsection\section
+        \renewcommand{\section}[1]{\clearpage\oldsection{#1}}
+  docx:
+    toc: true
+    number-sections: true
+execute:
+  echo: true
+  eval: false
+---
+
+# Цель работы
+
+Получить навыки работы с репозиториями и менеджерами пакетов.
+
+# Задачи
+
+1. Изучить, как и в каких файлах подключаются репозитории для установки программного обеспечения.
+2. Изучить основные команды `dnf`.
+3. Выполнить установку и удаление пакета с помощью `dnf`.
+4. Выполнить установку и удаление пакета с помощью `rpm`.
+
+# Соглашения об именовании
+
+В соответствии с требованиями к именованию:
+- Имя пользователя: `zhaoxinya`
+- Имя хоста: `zhaoxinya`
+- Имя виртуальной машины: `zhaoxinya`
+
+Проверка выполнена командами:
+
+```bash
+whoami
+hostname
+id
+
+Выполнение работы
+Работа с репозиториями
+Выполнен вход под суперпользователем и переход в каталог /etc/yum.repos.d:
+
+bash
+su -
+cd /etc/yum.repos.d
+ls
+В данном каталоге хранятся конфигурационные файлы репозиториев с расширением .repo.
+
+Список активных репозиториев проверен командой dnf repolist. Активны: baseos, appstream, extras.
+
+Использование dnf
+Поиск пакетов осуществляется командой dnf search user. Установка пакета nmap:
+
+bash
+dnf info nmap
+dnf install nmap
+Удаление пакета:
+
+bash
+dnf remove nmap
+dnf remove nmap*
+(Разница: dnf remove nmap удаляет только один пакет, а dnf remove nmap* удаляет все пакеты, начинающиеся с nmap).
+
+Работа с группами пакетов:
+
+bash
+dnf groups list
+dnf groupinfo "RPM Development Tools"
+dnf groupinstall "RPM Development Tools"
+dnf groupremove "RPM Development Tools"
+История транзакций:
+
+bash
+dnf history
+dnf history undo 6
+Использование rpm
+Скачивание пакета без установки:
+
+bash
+dnf install lynx --downloadonly
+find /var/cache/dnf/ -name "lynx*"
+Установка локального RPM-пакета:
+
+bash
+rpm -Uhv lynx-2.9.0-6.el10.x86_64.rpm
+which lynx
+Просмотр информации о пакете:
+
+bash
+rpm -qf $(which lynx)
+rpm -ql lynx
+rpm -qd lynx
+rpm -qc lynx
+rpm -q --scripts lynx
+Удаление пакета:
+
+bash
+rpm -e lynx
+Установка пакета dnsmasq через dnf и просмотр его информации через rpm -qi dnsmasq. Удаление выполнено командой rpm -e dnsmasq.
+
+Выводы
+В ходе лабораторной работы были получены навыки:
+
+Работы с репозиториями /etc/yum.repos.d/.
+
+Использования основных команд dnf: search, info, install, remove, grouplist, history.
+
+Установки и удаления пакетов через dnf и rpm.
+
+Просмотра информации о пакете: файлы, документация, конфигурация, скрипты.
+
+Все поставленные задачи выполнены.
+
+Ответы на контрольные вопросы
+Какая команда позволяет найти пакет rpm, содержащий файл useradd?
+dnf provides "*/useradd" (пакет shadow-utils).
+
+Какие команды показать имя группы dnf, содержащей инструменты безопасности?
+dnf grouplist, dnf groupinfo "Security Tools".
+
+Какая команда устанавливает rpm, загруженный из Интернета?
+dnf install https://example.com/package.rpm или rpm -Uhv http://example.com/package.rpm.
+
+Какая команда проверяет rpm на опасный код сценария?
+rpm -qp --scripts package.rpm.
+
+Какая команда показывает всю документацию в rpm?
+rpm -qd lynx.
+
+Какая команда показывает, какому пакету принадлежит файл?
+rpm -qf $(which lynx).
